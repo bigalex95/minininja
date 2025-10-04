@@ -63,7 +63,7 @@ _Player slicing fruits with hand swipes. Juice splashes on hit!_
 
 ```bash
 # 1. Clone repo
-git clone https://github.com/yourname/minininja.git
+git clone https://github.com/bigalex95/minininja.git
 cd minininja
 
 # 2. Install dependencies
