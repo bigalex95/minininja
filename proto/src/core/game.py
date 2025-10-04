@@ -5,10 +5,10 @@ import cv2
 import random
 import time
 
-from src.cv.hand_tracker import HandTracker
-from src.cv.gesture_detector import GestureDetector, Gesture
-from src.core.entities import Fruit, Trail
-from src.core.config import GameConfig
+from ..cv.hand_tracker import HandTracker
+from ..cv.gesture_detector import GestureDetector, Gesture
+from .entities import Fruit, Trail
+from .config import GameConfig
 
 
 class FruitNinjaGame:
