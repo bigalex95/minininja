@@ -15,7 +15,7 @@ uv sync  # or: pip install -e .
 ### Quick Method (Interactive)
 
 ```bash
-python setup_supabase.py
+python scripts/setup_database.py
 ```
 
 ### Manual Method

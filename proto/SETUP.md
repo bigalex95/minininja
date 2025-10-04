@@ -25,14 +25,10 @@ proto/
 ├── pyproject.toml           # Project dependencies
 ├── .env.example             # Environment variables template
 ├── .env                     # Your secrets (not in git)
-└── setup.sh                 # Setup script
-
-# Old files (can be removed after migration)
-├── config.py
-├── entities.py
-├── fruit_ninja_game.py
-├── hand_tracker.py
-└── gesture_detector.py
+├── docs/                    # Documentation
+├── scripts/                 # Setup and utility scripts
+├── tests/                   # Test scripts
+└── old_files_backup/        # Backup of old flat structure (can be removed)
 ```
 
 ## Setup Instructions
@@ -193,15 +189,15 @@ The modular structure makes it easy to extend:
 
 The old flat structure has been reorganized into a proper package structure:
 
-- Old files remain for backward compatibility
-- New structure follows Python best practices
-- All imports updated to use new paths
-- Old files can be safely removed after testing
+- ✅ Old files have been moved to `old_files_backup/`
+- ✅ New structure follows Python best practices
+- ✅ All imports updated to use new paths
+- ✅ Migration is complete - use the new structure
 
-To clean up old files:
+The `old_files_backup/` directory contains:
 
-```bash
-# Backup first!
-mkdir old_files
-mv config.py entities.py fruit_ninja_game.py hand_tracker.py gesture_detector.py old_files/
-```
+- `config.py` → now `src/core/config.py`
+- `entities.py` → now `src/core/entities.py`
+- `fruit_ninja_game.py` → now `src/core/game.py`
+- `hand_tracker.py` → now `src/cv/hand_tracker.py`
+- `gesture_detector.py` → now `src/cv/gesture_detector.py`

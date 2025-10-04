@@ -102,13 +102,22 @@ uv run main.py --difficulty hard --width 1280 --height 720 --debug
 ```
 proto/
 ├── main.py                 # Entry point with CLI
-├── config.py              # Game configuration and difficulty settings
-├── entities.py            # Game entities (Fruit, Trail, etc.)
-├── fruit_ninja_game.py    # Main game logic
-├── hand_tracker.py        # MediaPipe hand tracking wrapper
-├── gesture_detector.py    # Gesture detection algorithm
 ├── pyproject.toml         # Project dependencies
-└── README.md              # This file
+├── src/                   # Source code
+│   ├── core/              # Core game logic
+│   │   ├── config.py      # Game configuration and difficulty settings
+│   │   ├── entities.py    # Game entities (Fruit, Trail, etc.)
+│   │   └── game.py        # Main game controller
+│   ├── cv/                # Computer vision
+│   │   ├── hand_tracker.py    # MediaPipe hand tracking wrapper
+│   │   └── gesture_detector.py # Gesture detection algorithm
+│   ├── leaderboard/       # Online leaderboard
+│   │   └── leaderboard.py # Supabase integration
+│   └── ui/                # User interface
+│       └── leaderboard_ui.py # UI rendering
+├── docs/                  # Documentation
+├── scripts/               # Setup scripts
+└── tests/                 # Tests
 ```
 
 ## 🎨 Game Mechanics
@@ -178,18 +187,18 @@ Edit `config.py` to customize:
 ### Camera not working
 
 - Ensure your webcam is connected and not in use by another application
-- Try changing the camera index in `fruit_ninja_game.py` (line with `cv2.VideoCapture(0)`)
+- Try changing the camera index in `src/core/game.py` (line with `cv2.VideoCapture(0)`)
 
 ### Hand not detected
 
 - Ensure good lighting conditions
 - Keep your hand in view of the camera
-- Adjust `DETECTION_CONFIDENCE` and `TRACKING_CONFIDENCE` in `config.py`
+- Adjust `DETECTION_CONFIDENCE` and `TRACKING_CONFIDENCE` in `src/core/config.py`
 
 ### Gestures not recognized
 
 - Move your hand faster
-- Lower `MIN_SLASH_VELOCITY` in `config.py` or choose easy difficulty
+- Lower `MIN_SLASH_VELOCITY` in `src/core/config.py` or choose easy difficulty
 - Enable debug mode to see detection: `--debug`
 
 ## 🔧 Development
@@ -205,15 +214,15 @@ The prototype uses clean object-oriented design:
 
 ### Adding New Features
 
-1. **Game Entities**: Add to `entities.py` (follow `Fruit` or `Trail` as examples)
-2. **Configuration**: Add settings to `config.py` with sensible defaults
-3. **Game Logic**: Modify `fruit_ninja_game.py` game loop methods
+1. **Game Entities**: Add to `src/core/entities.py` (follow `Fruit` or `Trail` as examples)
+2. **Configuration**: Add settings to `src/core/config.py` with sensible defaults
+3. **Game Logic**: Modify `src/core/game.py` game loop methods
 4. **CLI Options**: Update argument parser in `main.py`
 
 Example: Adding a new entity type
 
 ```python
-# In entities.py
+# In src/core/entities.py
 class Bomb(Fruit):
     def __init__(self, x, y):
         super().__init__(x, y, radius=25, color=(0, 0, 255))  # Red bomb

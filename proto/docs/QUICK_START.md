@@ -6,10 +6,10 @@
 
 ```bash
 # Default settings
-uv run python main.py
+python main.py
 
-# Or with old method (still works)
-uv run python fruit_ninja_game.py
+# Or with uv
+uv run python main.py
 ```
 
 ### With Options
@@ -30,21 +30,21 @@ uv run python main.py --difficulty hard --width 1280 --height 720 --debug
 
 ## 📁 File Guide
 
-| File                  | Purpose           | When to Edit                    |
-| --------------------- | ----------------- | ------------------------------- |
-| `main.py`             | Entry point & CLI | Add new command-line options    |
-| `config.py`           | All settings      | Change game behavior/parameters |
-| `entities.py`         | Game objects      | Add new entity types            |
-| `fruit_ninja_game.py` | Game logic        | Modify game mechanics           |
-| `hand_tracker.py`     | Hand detection    | Tweak CV parameters             |
-| `gesture_detector.py` | Motion detection  | Change gesture detection        |
-| `test_setup.py`       | Validation        | Test your changes               |
+| File                         | Purpose           | When to Edit                    |
+| ---------------------------- | ----------------- | ------------------------------- |
+| `main.py`                    | Entry point & CLI | Add new command-line options    |
+| `src/core/config.py`         | All settings      | Change game behavior/parameters |
+| `src/core/entities.py`       | Game objects      | Add new entity types            |
+| `src/core/game.py`           | Game logic        | Modify game mechanics           |
+| `src/cv/hand_tracker.py`     | Hand detection    | Tweak CV parameters             |
+| `src/cv/gesture_detector.py` | Motion detection  | Change gesture detection        |
+| `tests/test_setup.py`        | Validation        | Test your changes               |
 
 ## 🎮 Quick Configuration Changes
 
 ### Make Game Easier
 
-Edit `config.py`:
+Edit `src/core/config.py`:
 
 ```python
 FRUIT_SPAWN_INTERVAL = 2.5  # Slower spawning
@@ -54,7 +54,7 @@ MIN_SLASH_VELOCITY = 0.05   # Less sensitive
 
 ### Make Trail More Visible
 
-Edit `config.py`:
+Edit `src/core/config.py`:
 
 ```python
 TRAIL_LIFETIME = 1.0        # Trail lasts longer
@@ -64,7 +64,7 @@ TRAIL_COLOR = (0, 255, 255) # Yellow trail
 
 ### Enable Debug Mode Permanently
 
-Edit `config.py`:
+Edit `src/core/config.py`:
 
 ```python
 DEBUG_MODE = True
@@ -91,7 +91,7 @@ if args.my_option:
 
 ### Add a New Entity Type
 
-1. Add class to `entities.py`:
+1. Add class to `src/core/entities.py`:
 
 ```python
 class Bomb:
@@ -99,10 +99,10 @@ class Bomb:
         ...
 ```
 
-2. Use in `fruit_ninja_game.py`:
+2. Use in `src/core/game.py`:
 
 ```python
-from entities import Fruit, Trail, Bomb
+from src.core.entities import Fruit, Trail, Bomb
 
 self.bombs = []  # In __init__
 # Add spawn, update, render logic
@@ -110,7 +110,7 @@ self.bombs = []  # In __init__
 
 ### Change Gesture Detection
 
-Edit `gesture_detector.py`:
+Edit `src/cv/gesture_detector.py`:
 
 ```python
 # Adjust sensitivity
@@ -142,13 +142,13 @@ uv run python main.py --help
 ```
 main.py
   ↓ (parse args)
-config.py
+src/core/config.py
   ↓ (create GameConfig)
-fruit_ninja_game.py
+src/core/game.py
   ↓ (initialize game)
-  ├─→ hand_tracker.py (detect hand)
-  ├─→ gesture_detector.py (detect motion)
-  ├─→ entities.py (manage fruits/trail)
+  ├─→ src/cv/hand_tracker.py (detect hand)
+  ├─→ src/cv/gesture_detector.py (detect motion)
+  ├─→ src/core/entities.py (manage fruits/trail)
   └─→ render & display
 ```
 
@@ -166,7 +166,7 @@ fruit_ninja_game.py
 
 ```bash
 # Test camera index
-# Edit fruit_ninja_game.py line ~130
+# Edit src/core/game.py line ~130
 cap = cv2.VideoCapture(1)  # Try different numbers: 0, 1, 2
 ```
 
@@ -174,10 +174,10 @@ cap = cv2.VideoCapture(1)  # Try different numbers: 0, 1, 2
 
 ```bash
 # Run with debug mode
-uv run python main.py --debug
+python main.py --debug
 
 # If still not working, lower confidence
-# Edit config.py:
+# Edit src/core/config.py:
 DETECTION_CONFIDENCE = 0.5
 TRACKING_CONFIDENCE = 0.5
 ```
@@ -186,12 +186,12 @@ TRACKING_CONFIDENCE = 0.5
 
 ```bash
 # Too sensitive (false positives)
-uv run python main.py --difficulty hard  # Higher threshold
+python main.py --difficulty hard  # Higher threshold
 
 # Not sensitive enough
-uv run python main.py --difficulty easy  # Lower threshold
+python main.py --difficulty easy  # Lower threshold
 
-# Or edit config.py:
+# Or edit src/core/config.py:
 MIN_SLASH_VELOCITY = 0.05  # Higher = less sensitive
 MIN_SLASH_VELOCITY = 0.01  # Lower = more sensitive
 ```
@@ -207,7 +207,7 @@ MIN_SLASH_VELOCITY = 0.01  # Lower = more sensitive
 
 ### Change Fruit Color
 
-Edit `config.py`:
+Edit `src/core/config.py`:
 
 ```python
 FRUIT_COLOR = (0, 0, 255)  # Red
@@ -217,7 +217,7 @@ FRUIT_COLOR = (0, 255, 0)  # Green
 
 ### Make Fruits Bigger
 
-Edit `config.py`:
+Edit `src/core/config.py`:
 
 ```python
 FRUIT_RADIUS = 30  # Default is 20
@@ -225,7 +225,7 @@ FRUIT_RADIUS = 30  # Default is 20
 
 ### Change Window Title
 
-Edit `config.py`:
+Edit `src/core/config.py`:
 
 ```python
 WINDOW_TITLE = "My Awesome Fruit Game!"
@@ -233,7 +233,7 @@ WINDOW_TITLE = "My Awesome Fruit Game!"
 
 ### Multiple Fruit Colors
 
-Edit `fruit_ninja_game.py`, `spawn_fruit()`:
+Edit `src/core/game.py`, `spawn_fruit()`:
 
 ```python
 import random
