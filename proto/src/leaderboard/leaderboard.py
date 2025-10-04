@@ -45,10 +45,10 @@ class Leaderboard:
             }
             
             response = self.client.table(self.table_name).insert(data).execute()
+            if hasattr(response, 'error') and response.error:
+                print(f"Error submitting score: {response.error}")
+                return False
             return True
-        except Exception as e:
-            print(f"Error submitting score: {e}")
-            return False
     
     def get_top_scores(self, limit: int = 10, difficulty: Optional[str] = None) -> List[Dict]:
         """
