@@ -56,8 +56,8 @@ class FruitNinjaGame:
         for fruit in self.fruits:
             fruit.update(self.config.FRUIT_VELOCITY)
         
-        # Remove off-screen fruits
-        self.fruits = [f for f in self.fruits if not f.is_offscreen()]
+        # Remove off-screen fruits and sliced fruits
+        self.fruits = [f for f in self.fruits if f.alive and not f.is_offscreen()]
 
     def check_slice(self, gesture):
         """Check if slashing gesture hits any fruits"""
