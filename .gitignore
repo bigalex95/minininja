@@ -39,3 +39,28 @@
 
 # debug information files
 *.dwo
+
+# Python
+proto/__pycache__/
+proto/*.pyc
+.env
+
+# C++ Build
+build/
+*.o
+*.a
+*.so
+*.dll
+*.exe
+
+# Qt
+*.pro.user
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
