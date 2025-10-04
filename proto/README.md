@@ -186,13 +186,14 @@ The prototype uses clean object-oriented design:
 4. **CLI Options**: Update argument parser in `main.py`
 
 Example: Adding a new entity type
+
 ```python
 # In entities.py
 class Bomb(Fruit):
     def __init__(self, x, y):
         super().__init__(x, y, radius=25, color=(0, 0, 255))  # Red bomb
         self.is_bomb = True
-    
+
     def check_collision(self, x, y, threshold=20):
         if super().check_collision(x, y, threshold):
             return True  # Game over or penalty logic in main game
