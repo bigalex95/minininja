@@ -49,6 +49,9 @@ class Leaderboard:
                 print(f"Error submitting score: {response.error}")
                 return False
             return True
+        except Exception as e:
+            print(f"Error submitting score: {e}")
+            return False
     
     def get_top_scores(self, limit: int = 10, difficulty: Optional[str] = None) -> List[Dict]:
         """
