@@ -1,6 +1,6 @@
-# Fruit Ninja CV - Prototype
+# Fruit Ninja CV - Python Prototype
 
-A computer vision-based Fruit Ninja game using hand gesture recognition via MediaPipe.
+A computer vision-based Fruit Ninja game using hand gesture recognition via MediaPipe with **online leaderboard** support!
 
 ## 🎮 Features
 
@@ -8,46 +8,71 @@ A computer vision-based Fruit Ninja game using hand gesture recognition via Medi
 - **Visual Slash Trail**: See a fading trail that follows your finger movements
 - **Omnidirectional Slashing**: Slash in any direction - horizontal, vertical, diagonal, or circular
 - **Multiple Difficulty Levels**: Easy, Medium, and Hard modes
+- **🏆 Online Leaderboard**: Submit scores and compete with players worldwide via Supabase
+- **Player Profiles**: Track your scores and rank
 - **Configurable Settings**: Customize resolution, trail effects, and debug options
 
 ## 📋 Requirements
 
 - Python 3.11+
 - Webcam
-- Dependencies listed in `pyproject.toml`
+- Supabase account (free) for leaderboard functionality
 
 ## 🚀 Quick Start
 
-### Installation
+### 1. Installation
+
+Run the automated setup script:
 
 ```bash
-# Install dependencies with uv
+./setup.sh
+```
+
+Or manually:
+
+```bash
+# Install dependencies with uv (recommended)
 uv sync
 
 # Or with pip
 pip install -e .
 ```
 
-### Running the Game
+### 2. Configure Leaderboard (Optional but Recommended)
+
+1. **Create a Supabase account** at https://supabase.com (free)
+2. **Follow the setup guide** in `docs/SUPABASE_SETUP.md`
+3. **Copy your credentials** to `.env`:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your Supabase URL and API key
+   ```
+
+See [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) for detailed instructions.
+
+### 3. Run the Game
 
 ```bash
-# Using uv
-uv run main.py
-
-# Or if installed
+# Basic usage
 python main.py
 
-# Or directly
-python -m main
+# With player name and leaderboard
+python main.py --player-name "YourName" --show-leaderboard
+
+# Choose difficulty
+python main.py --difficulty hard
+
+# Custom resolution
+python main.py --width 1280 --height 720
 ```
 
-## 🎯 Usage
+## 🎯 Usage Examples
 
 ### Basic Commands
 
 ```bash
 # Start with default settings (medium difficulty)
-uv run main.py
+python main.py
 
 # Choose difficulty level
 uv run main.py --difficulty easy

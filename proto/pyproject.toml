@@ -18,10 +18,12 @@ classifiers = [
 dependencies = [
     "mediapipe>=0.10.14",
     "opencv-python>=4.12.0.88",
+    "supabase>=2.0.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [project.scripts]
-fruit-ninja = "main:main"
+fruit-ninja = "src.main:main"
 
 [project.urls]
 Homepage = "https://github.com/bigalex95/minininja"
