@@ -91,19 +91,31 @@ proto/
 ### Fruit Spawning
 
 - Fruits spawn at the bottom of the screen at regular intervals
-- They move upward and disappear if not sliced
+- They move upward continuously
+- Disappear automatically when they move off-screen (top)
+- Sliced fruits are removed from the game immediately
 
 ### Slashing Detection
 
-- The game tracks your index fingertip position
+- The game tracks your index fingertip position in real-time
 - Creates a visual trail that fades over 0.5 seconds
-- Detects when your trail intersects with fruits
-- Any fast motion in any direction counts as a slash
+- Trail points within the last 0.3 seconds are checked for collisions
+- When your trail intersects with a fruit (within collision threshold), the fruit is instantly sliced
+- Any fast motion in any direction counts as a slashing gesture
+- Only active (alive) fruits can be sliced
+
+### Collision System
+
+- **Trail-based collision**: Uses recent trail points instead of just current finger position
+- **Collision threshold**: Configurable distance (default: 20 pixels from fruit center)
+- **Automatic state management**: Fruits automatically mark themselves as sliced on collision
+- **Efficient cleanup**: Sliced and off-screen fruits are removed in the same update cycle
 
 ### Scoring
 
-- Each sliced fruit adds 1 point to your score
-- Final score is displayed when you quit
+- Each successfully sliced fruit adds 1 point to your score
+- Score is displayed in real-time at the top-left corner
+- Final score is shown when you quit the game
 
 ## ⚙️ Configuration
 
@@ -157,12 +169,36 @@ Edit `config.py` to customize:
 
 ## 🔧 Development
 
+### Code Architecture Highlights
+
+The prototype uses clean object-oriented design:
+
+- **Entities encapsulate their own logic**: `Fruit.check_collision()` handles both collision detection and state updates
+- **Trail management is automatic**: Points are added, aged, and removed automatically
+- **Single responsibility**: Each class has a clear, focused purpose
+- **Easy to extend**: Add new entity types by following the `Fruit` class pattern
+
 ### Adding New Features
 
-1. **Game Entities**: Add to `entities.py`
-2. **Configuration**: Add settings to `config.py`
-3. **Game Logic**: Modify `fruit_ninja_game.py`
+1. **Game Entities**: Add to `entities.py` (follow `Fruit` or `Trail` as examples)
+2. **Configuration**: Add settings to `config.py` with sensible defaults
+3. **Game Logic**: Modify `fruit_ninja_game.py` game loop methods
 4. **CLI Options**: Update argument parser in `main.py`
+
+Example: Adding a new entity type
+
+```python
+# In entities.py
+class Bomb(Fruit):
+    def __init__(self, x, y):
+        super().__init__(x, y, radius=25, color=(0, 0, 255))  # Red bomb
+        self.is_bomb = True
+
+    def check_collision(self, x, y, threshold=20):
+        if super().check_collision(x, y, threshold):
+            return True  # Game over or penalty logic in main game
+        return False
+```
 
 ### Running in Debug Mode
 
@@ -173,8 +209,9 @@ uv run main.py --debug
 This will show:
 
 - Hand landmarks (green dots)
-- Fingertip marker (yellow dot)
-- Current gesture status
+- Fingertip marker (yellow/cyan dot)
+- Current gesture status ("SLASHING!" when detected)
+- Real-time trail visualization
 
 ## 📝 License
 
