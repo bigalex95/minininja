@@ -28,7 +28,10 @@ class Fruit:
         if not self.alive:
             return False
         dist = ((self.x - x)**2 + (self.y - y)**2) ** 0.5
-        return dist < (self.radius + threshold)
+        if dist < (self.radius + threshold):
+            self.alive = False
+            return True
+        return False
 
 
 class TrailPoint:
