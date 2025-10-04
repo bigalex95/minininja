@@ -72,11 +72,12 @@ class FruitNinjaGame:
         # Check collision between trail and fruits
         for trail_point in recent_points:
             for fruit in self.fruits:
-                if fruit.check_collision(
+                if fruit.alive and fruit.check_collision(
                     trail_point.x,
                     trail_point.y,
                     self.config.SLICE_THRESHOLD
                 ):
+                    fruit.alive = False  # Mark fruit as sliced
                     self.score += 1
                     break  # Move to next trail point
 
