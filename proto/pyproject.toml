@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-fruit-ninja = "src.main:main"
+fruit-ninja = "main:main"
 
 [project.urls]
 Homepage = "https://github.com/bigalex95/minininja"
