@@ -123,7 +123,6 @@ SUPABASE_KEY={supabase_key}
     print("Let's test if everything works...")
     
     try:
-        import os
         os.environ['SUPABASE_URL'] = supabase_url
         os.environ['SUPABASE_KEY'] = supabase_key
         
