@@ -5,9 +5,16 @@ Main entry point for the application
 """
 import argparse
 import sys
+import os
+from dotenv import load_dotenv
 
-from fruit_ninja_game import FruitNinjaGame
-from config import GameConfig, DifficultyLevel
+# Load environment variables
+load_dotenv()
+
+from src.core.game import FruitNinjaGame
+from src.core.config import GameConfig, DifficultyLevel
+from src.leaderboard import Leaderboard
+from src.ui import LeaderboardUI
 
 
 def parse_args():
@@ -57,6 +64,19 @@ Examples:
         help='Disable slash trail visualization'
     )
     
+    parser.add_argument(
+        '--player-name',
+        type=str,
+        default='Player',
+        help='Player name for leaderboard (default: Player)'
+    )
+    
+    parser.add_argument(
+        '--show-leaderboard',
+        action='store_true',
+        help='Show leaderboard at game end'
+    )
+    
     return parser.parse_args()
 
 
@@ -103,13 +123,42 @@ def main():
     print(f"Difficulty: {args.difficulty.upper()}")
     print(f"Resolution: {args.width}x{args.height}")
     print(f"Debug Mode: {'ON' if args.debug else 'OFF'}")
+    print(f"Player: {args.player_name}")
     print("=" * 50)
     print()
     
     try:
         config = create_config(args)
         game = FruitNinjaGame(config=config)
-        game.run()
+        final_score = game.run()
+        
+        # Handle leaderboard submission
+        if final_score is not None and final_score > 0:
+            print(f"\n🎉 Final Score: {final_score}")
+            
+            # Try to submit to leaderboard
+            try:
+                leaderboard = Leaderboard()
+                if leaderboard.submit_score(args.player_name, final_score, args.difficulty):
+                    print("✅ Score submitted to leaderboard!")
+                    
+                    # Show top scores if requested
+                    if args.show_leaderboard:
+                        print("\n" + "=" * 50)
+                        print("  TOP 10 SCORES")
+                        print("=" * 50)
+                        top_scores = leaderboard.get_top_scores(limit=10, difficulty=args.difficulty)
+                        for idx, entry in enumerate(top_scores, 1):
+                            player = entry['player_name']
+                            score = entry['score']
+                            marker = "👑" if player == args.player_name else "  "
+                            print(f"{marker} {idx:2d}. {player:20s} - {score:5d}")
+                else:
+                    print("⚠️  Could not submit score to leaderboard")
+            except Exception as e:
+                print(f"⚠️  Leaderboard unavailable: {e}")
+                print(f"   Make sure to set up the database table. Run: python scripts/setup_database.py")
+        
     except KeyboardInterrupt:
         print("\n\nGame interrupted by user")
         sys.exit(0)
