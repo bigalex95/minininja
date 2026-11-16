@@ -18,8 +18,9 @@ A webcam fruit-slicing game controlled by your index finger. MediaPipe Hands tra
 flowchart LR
     A[Webcam frame<br/>OpenCV, mirrored] --> B[HandTracker<br/>MediaPipe Hands]
     B -->|index fingertip, normalized x,y| C[GestureDetector<br/>velocity over last 10 frames]
-    C -->|SLASHING| D[Trail<br/>points with 0.5 s lifetime]
-    D -->|points from last 0.3 s| E[Fruit collision<br/>20 px threshold]
+    B -->|fingertip each frame| D[Trail<br/>points with 0.5 s lifetime]
+    C -->|SLASHING gates check| E[Fruit collision<br/>20 px threshold]
+    D -->|points from last 0.3 s| E
     E --> F[Score + rendering]
     F --> G[Optional Supabase leaderboard]
 ```
@@ -32,7 +33,7 @@ flowchart LR
 
 ## Tech stack
 
-Python 3.11+, OpenCV, MediaPipe (`>=0.10.14`), supabase-py, python-dotenv; dependencies managed with `uv`.
+Python 3.11+, OpenCV, MediaPipe (`>=0.10.14,<0.10.30`; newer releases removed `mp.solutions`), supabase-py, python-dotenv; dependencies managed with `uv`.
 
 ## Getting started
 
@@ -44,7 +45,7 @@ cd minininja/proto
 uv sync                 # or: pip install -e .
 uv run python main.py --help
 uv run python main.py                              # medium difficulty, 640x480
-uv run python main.py --difficulty hard --debug    # show landmarks and slash status
+uv run python main.py --difficulty hard --debug  # show hand landmarks
 uv run python main.py --width 1280 --height 720
 ```
 

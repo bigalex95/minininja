@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MiniNinja - A computer vision-based MiniNinja game
+MiniNinja - A webcam fruit-slicing game controlled by hand gestures
 Main entry point for the application
 """
 import argparse
