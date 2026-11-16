@@ -4,7 +4,7 @@ Core game logic and entities
 
 from .config import GameConfig, DifficultyLevel
 from .entities import Fruit, Trail, TrailPoint
-from .game import FruitNinjaGame
+from .game import MiniNinjaGame
 
 __all__ = [
     'GameConfig',
@@ -12,5 +12,5 @@ __all__ = [
     'Fruit',
     'Trail',
     'TrailPoint',
-    'FruitNinjaGame',
+    'MiniNinjaGame',
 ]

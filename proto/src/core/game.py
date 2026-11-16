@@ -1,5 +1,5 @@
 """
-Main game class for Fruit Ninja CV
+Main game class for MiniNinja
 """
 import cv2
 import random
@@ -11,7 +11,7 @@ from .entities import Fruit, Trail
 from .config import GameConfig
 
 
-class FruitNinjaGame:
+class MiniNinjaGame:
     """Main game controller"""
     
     def __init__(self, config=None):

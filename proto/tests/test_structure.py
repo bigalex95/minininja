@@ -10,7 +10,7 @@ def test_imports():
     print("Testing imports...")
     
     try:
-        from src.core import GameConfig, DifficultyLevel, Fruit, Trail, FruitNinjaGame
+        from src.core import GameConfig, DifficultyLevel, Fruit, Trail, MiniNinjaGame
         print("✅ Core modules imported successfully")
     except Exception as e:
         print(f"❌ Core modules import failed: {e}")
@@ -79,14 +79,11 @@ def test_structure():
         'pyproject.toml',
         '.env.example',
         '.gitignore',
-        'README.md',
-        'SETUP.md',
+        '../README.md',
         'scripts/setup.sh',
         'scripts/setup_supabase.py',
         'docs/supabase_schema.sql',
         'docs/SUPABASE_SETUP.md',
-        'docs/PROJECT_STRUCTURE.md',
-        'docs/CLEANUP_SUMMARY.md',
         'tests/test_structure.py'
     ]
     
@@ -110,7 +107,7 @@ def test_structure():
 
 def main():
     print("=" * 60)
-    print("Fruit Ninja CV - Structure & Import Test")
+    print("MiniNinja - Structure & Import Test")
     print("=" * 60)
     print()
     

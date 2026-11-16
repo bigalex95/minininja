@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fruit Ninja CV - A computer vision-based Fruit Ninja game
+MiniNinja - A webcam fruit-slicing game controlled by hand gestures
 Main entry point for the application
 """
 import argparse
@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-from src.core.game import FruitNinjaGame
+from src.core.game import MiniNinjaGame
 from src.core.config import GameConfig, DifficultyLevel
 from src.leaderboard import Leaderboard
 from src.ui import LeaderboardUI
@@ -20,7 +20,7 @@ from src.ui import LeaderboardUI
 def parse_args():
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
-        description='Fruit Ninja CV - Slice fruits with hand gestures!',
+        description='MiniNinja - Slice fruits with hand gestures!',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -118,7 +118,7 @@ def main():
     args = parse_args()
     
     print("=" * 50)
-    print("  Fruit Ninja CV - Hand Gesture Edition")
+    print("  MiniNinja - Hand Gesture Edition")
     print("=" * 50)
     print(f"Difficulty: {args.difficulty.upper()}")
     print(f"Resolution: {args.width}x{args.height}")
@@ -129,7 +129,7 @@ def main():
     
     try:
         config = create_config(args)
-        game = FruitNinjaGame(config=config)
+        game = MiniNinjaGame(config=config)
         final_score = game.run()
         
         # Handle leaderboard submission

@@ -3,12 +3,12 @@ Game configuration settings
 """
 
 class GameConfig:
-    """Configuration for the Fruit Ninja game"""
+    """Configuration for the MiniNinja game"""
     
     # Display settings
     WINDOW_WIDTH = 640
     WINDOW_HEIGHT = 480
-    WINDOW_TITLE = "Fruit Ninja CV"
+    WINDOW_TITLE = "MiniNinja"
     FPS = 30
     
     # Game mechanics

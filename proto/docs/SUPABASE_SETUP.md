@@ -8,7 +8,7 @@
 2. Sign up or log in
 3. Click "New Project"
 4. Fill in:
-   - **Name**: `fruit-ninja-cv` (or your preferred name)
+   - **Name**: `minininja` (or your preferred name)
    - **Database Password**: Create a strong password
    - **Region**: Choose closest to you
 5. Wait for project to initialize (~2 minutes)

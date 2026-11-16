@@ -22,7 +22,7 @@ def print_step(num, text):
     print("-" * 70)
 
 def main():
-    print_header("Fruit Ninja CV - Supabase Setup Helper")
+    print_header("MiniNinja - Supabase Setup Helper")
     
     print("This helper will guide you through setting up Supabase for the leaderboard.")
     print("\nYou'll need:")
@@ -45,7 +45,7 @@ def main():
     print_step(2, "Create New Project")
     print("1. Click 'New Project'")
     print("2. Fill in:")
-    print("   • Name: fruit-ninja-cv (or your choice)")
+    print("   • Name: minininja (or your choice)")
     print("   • Database Password: Create a strong password")
     print("   • Region: Choose closest to your location")
     print("3. Click 'Create new project'")

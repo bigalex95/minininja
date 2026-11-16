@@ -1,147 +1,106 @@
-# MiniNinja 🥷
+# MiniNinja
 
-## Overview
+A webcam fruit-slicing game controlled by your index finger. MediaPipe Hands tracks the hand, a velocity check turns fast fingertip motion into a slash, and OpenCV renders the game. No controllers or touchscreen, just a camera. A small Python prototype.
 
-MiniNinja is an interactive, camera-based fruit-slicing game where players use hand gestures to slice flying fruits—no touch, no controllers, just vision. Built with real-time hand tracking and swipe detection, it turns your webcam into a dojo for mini ninjas.
+<!-- TODO: demo GIF of gameplay (hand swipe slicing fruit, trail visible) -->
 
-## Problem Statement
+## Highlights
 
-Traditional gesture-based games often require wearables, touchscreens, or complex setups. MiniNinja solves this by using **only a standard webcam** and **on-device computer vision** to enable intuitive, contactless interaction. This is interesting for CV because it combines:
+- Single-hand tracking with MediaPipe Hands (21 landmarks); the game uses the index fingertip (landmark 8).
+- Omnidirectional slashing: any fast fingertip motion counts, not only fixed swipe directions.
+- Fading slash trail; collisions are tested against recent trail points, not only the current fingertip position.
+- Three difficulty presets (spawn rate, fruit speed, slash sensitivity), resolution and debug options via CLI.
+- Optional online leaderboard backed by Supabase (the game runs without it).
 
-- Real-time hand landmark estimation (21-point 3D pose)
-- Temporal gesture recognition (swipe direction/speed)
-- Low-latency rendering for responsive gameplay  
-  All while running locally—no cloud, no internet.
+## How it works
 
-## Dataset
+```mermaid
+flowchart LR
+    A[Webcam frame<br/>OpenCV, mirrored] --> B[HandTracker<br/>MediaPipe Hands]
+    B -->|index fingertip, normalized x,y| C[GestureDetector<br/>velocity over last 10 frames]
+    B -->|fingertip each frame| D[Trail<br/>points with 0.5 s lifetime]
+    C -->|SLASHING gates check| E[Fruit collision<br/>20 px threshold]
+    D -->|points from last 0.3 s| E
+    E --> F[Score + rendering]
+    F --> G[Optional Supabase leaderboard]
+```
 
-MiniNinja does not use a static dataset. Instead, it processes **live video streams** from a webcam:
+- `src/cv/hand_tracker.py` wraps `mp.solutions.hands` (1 hand, detection/tracking confidence 0.7) and returns the first hand's landmarks as normalized `(x, y)`.
+- `src/cv/gesture_detector.py` keeps the last 10 index-fingertip positions and computes the average per-frame displacement across that window. If the speed (normalized units per frame) exceeds `MIN_SLASH_VELOCITY`, the state is `SLASHING`. When the hand is lost, the history is cleared.
+- `src/core/entities.py` defines `Fruit` and `Trail`; `src/core/game.py` runs the loop (spawning, upward movement, collisions, scoring, drawing). Fruits are sliced when a trail point from the last 0.3 s is within the slice threshold.
+- `src/core/config.py` holds all tunables and the difficulty presets.
+- `src/leaderboard/` and `src/ui/` implement the optional Supabase score submission and its display.
 
-- **Input**: Real-time RGB video (640×480+ @ 30 FPS)
-- **Annotations**: Hand landmarks generated on-the-fly by MediaPipe Hands (21-point 3D hand model)
-- **Gesture labels**: Dynamically inferred from fingertip motion and velocity
-  - Detects **omnidirectional slashing** (any fast motion)
-  - Uses temporal window (0.3s) for trail-based collision detection
-  - Configurable sensitivity thresholds for different difficulty levels
+## Tech stack
 
-> 💡 _No pre-collected dataset is needed—interaction is continuous and user-driven._
+Python 3.11+, OpenCV, MediaPipe (`>=0.10.14,<0.10.30`; newer releases removed `mp.solutions`), supabase-py, python-dotenv; dependencies managed with `uv`.
 
-## Method / Approach
+## Getting started
 
-### Architecture
+Prerequisites: Python 3.11+, a webcam (camera index 0 is hard-coded in `src/core/game.py`), and [uv](https://docs.astral.sh/uv/) (or pip).
 
-- **Input**: Webcam feed → RGB frame (flipped for mirror effect)
-- **Hand Detection**: MediaPipe Hands (BlazePalm + Hand Landmark CNN)
-  - 21-point hand landmark detection
-  - Configurable detection/tracking confidence thresholds
-- **Gesture Engine**:
-  - Temporal velocity analysis of index fingertip (landmark #8)
-  - History-based motion tracking (10 frames)
-  - Omnidirectional slash detection (any fast motion counts)
-- **Trail System**:
-  - Visual feedback with fading effect (0.5s lifetime)
-  - Trail-based collision detection (checks last 0.3s of motion)
-- **Game Logic**:
-  - Fruit spawning with configurable intervals
-  - Physics-based upward movement
-  - Collision detection with automatic state management
-  - Real-time scoring
-- **Output**: Annotated frame with fruits, trail, score, and optional debug info
+```bash
+git clone https://github.com/bigalex95/minininja.git
+cd minininja/proto
+uv sync                 # or: pip install -e .
+uv run python main.py --help
+uv run python main.py                              # medium difficulty, 640x480
+uv run python main.py --difficulty hard --debug  # show hand landmarks
+uv run python main.py --width 1280 --height 720
+```
 
-### Key Libraries
+Options: `--difficulty {easy,medium,hard}`, `--width`, `--height`, `--debug`, `--no-trail`, `--player-name`, `--show-leaderboard`.
 
-| Layer        | Technology                             |
-| ------------ | -------------------------------------- |
-| Prototype    | Python, OpenCV, MediaPipe              |
-| Production   | C++, OpenCV, MediaPipe (C++ API), Qt 6 |
-| Build System | CMake (production), UV (prototype)     |
-| Rendering    | Qt Widgets / QImage                    |
+### Leaderboard (optional)
 
-### Prototype Architecture Highlights
+At game end the score is submitted to Supabase if credentials are available; otherwise a warning is printed and the game still works.
 
-The Python prototype demonstrates clean software design:
+```bash
+cp .env.example .env     # set SUPABASE_URL and SUPABASE_KEY
+```
 
-- **Modular structure**: Separate modules for config, entities, tracking, and game logic
-- **Entity encapsulation**: Game objects manage their own state and behavior
-- **Configuration management**: Centralized settings with multiple difficulty presets
-- **CLI interface**: Professional command-line interface with argparse
-- **Extensibility**: Easy to add new features (documented with code examples)
+Create the table with [`proto/docs/supabase_schema.sql`](proto/docs/supabase_schema.sql); step-by-step instructions are in [`proto/docs/SUPABASE_SETUP.md`](proto/docs/SUPABASE_SETUP.md). Helper scripts are in `proto/scripts/`.
 
-## Results
+## Controls
 
-### Performance (on mid-range laptop: i5, 8GB RAM)
+| Input | Action |
+| --- | --- |
+| Move index finger fast | Slash (any direction) |
+| `q` | Quit |
 
-- **End-to-end latency**: ~60–80 ms (camera → slice response)
-- **Hand tracking**: 25–30 FPS (stable under good lighting)
-- **Gesture detection**: Near-instant response with omnidirectional slashing
-- **Trail rendering**: Smooth 30 FPS with up to 50 trail points
-- **Game mechanics**: Reliable collision detection with trail-based system
+Keep one hand in view with good lighting. If slashes are missed, move faster or lower `MIN_SLASH_VELOCITY` (the `hard` preset has the lowest threshold, so it is the most sensitive to motion); the tunables are `MIN_SLASH_VELOCITY`, `DETECTION_CONFIDENCE` and `TRACKING_CONFIDENCE` in `proto/src/core/config.py`.
 
-### Difficulty Levels
+| Preset | Spawn interval | Fruit speed | Min slash velocity |
+| --- | --- | --- | --- |
+| easy | 2.0 s | 3 px/frame | 0.05 |
+| medium | 1.5 s | 5 px/frame | 0.03 |
+| hard | 1.0 s | 7 px/frame | 0.02 |
 
-The prototype includes three difficulty presets:
-
-- **Easy**: 2.0s spawn interval, slower fruits (3 px/frame), relaxed gesture detection
-- **Medium**: 1.5s spawn interval, moderate speed (5 px/frame), balanced sensitivity
-- **Hard**: 1.0s spawn interval, fast fruits (7 px/frame), precise gesture required
-
-### Example Output
-
-![MiniNinja gameplay](assets/demo.gif)  
-_Player slicing fruits with hand swipes. Juice splashes on hit!_
-
-> 📌 _Demo video/GIF recommended in `assets/`_
-
-## Project Structure
+## Project structure
 
 ```
 minininja/
-├── proto/              # Python prototype with complete game implementation
-│   ├── main.py        # CLI entry point with multiple options
-│   ├── config.py      # Centralized configuration and difficulty levels
-│   ├── entities.py    # Game entities (Fruit, Trail)
-│   ├── fruit_ninja_game.py  # Main game controller
-│   ├── hand_tracker.py      # MediaPipe hand tracking wrapper
-│   ├── gesture_detector.py  # Gesture detection algorithm
-│   └── README.md      # Detailed proto documentation
-├── src/               # C++ production implementation (planned)
-├── tests/             # Unit and integration tests
-├── assets/            # Images, sounds, and media files
-└── docs/              # Additional documentation
+  proto/
+    main.py              # CLI entry point
+    pyproject.toml, uv.lock
+    .env.example         # Supabase credentials template
+    src/
+      core/              # config.py, entities.py, game.py
+      cv/                # hand_tracker.py, gesture_detector.py
+      leaderboard/       # Supabase client
+      ui/                # leaderboard rendering
+    scripts/             # Supabase setup helpers
+    docs/                # SUPABASE_SETUP.md, supabase_schema.sql
+    tests/test_structure.py   # import and file-layout check
+  LICENSE
 ```
 
-## Usage
+## Status and roadmap
 
-### Run Python Prototype
+Working Python prototype; only the `proto/` implementation exists. No latency or FPS benchmarks have been recorded, and the tests only check imports and file layout (`cd proto && uv run python tests/test_structure.py`).
 
-```bash
-# 1. Clone repo
-git clone https://github.com/bigalex95/minininja.git
-cd minininja/proto
+Ideas, not implemented: gesture unit tests with recorded landmark sequences, a benchmark script, bombs and combos, sound, multi-hand support, flattening `proto/` into the repo root, a native C++/Qt port.
 
-# 2. Install dependencies (using uv - recommended)
-uv sync
+## License
 
-# Or with pip
-pip install -e .
-
-# 3. Run with default settings
-uv run python main.py
-
-# Or with custom options
-uv run python main.py --difficulty hard --debug
-uv run python main.py --width 1280 --height 720
-
-# See all options
-uv run python main.py --help
-```
-
-### Prototype Features
-
-- **CLI with multiple options**: difficulty levels, resolution, debug mode
-- **Omnidirectional slashing**: Slash in any direction (not just 4 cardinal directions)
-- **Visual trail effect**: Fading trail that follows your finger movements
-- **Configurable settings**: Easily adjust game parameters in `config.py`
-- **Clean architecture**: Modular design with separate concerns
-
-📖 **Full documentation**: See `proto/README.md` for detailed usage, configuration, and development guide.
+MIT, see [LICENSE](LICENSE).

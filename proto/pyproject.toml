@@ -1,8 +1,7 @@
 [project]
-name = "fruit-ninja-cv"
+name = "minininja"
 version = "0.1.0"
-description = "A computer vision-based Fruit Ninja game using hand gesture recognition"
-readme = "README.md"
+description = "A webcam fruit-slicing game controlled by hand gestures"
 requires-python = ">=3.11"
 authors = [
     {name = "bigalex95"}
@@ -16,14 +15,14 @@ classifiers = [
 ]
 
 dependencies = [
-    "mediapipe>=0.10.14",
+    "mediapipe>=0.10.14,<0.10.30",
     "opencv-python>=4.12.0.88",
     "supabase>=2.0.0",
     "python-dotenv>=1.0.0",
 ]
 
 [project.scripts]
-fruit-ninja = "main:main"
+minininja = "main:main"
 
 [project.urls]
 Homepage = "https://github.com/bigalex95/minininja"
