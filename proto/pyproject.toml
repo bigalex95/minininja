@@ -2,7 +2,6 @@
 name = "fruit-ninja-cv"
 version = "0.1.0"
 description = "A computer vision-based Fruit Ninja game using hand gesture recognition"
-readme = "README.md"
 requires-python = ">=3.11"
 authors = [
     {name = "bigalex95"}

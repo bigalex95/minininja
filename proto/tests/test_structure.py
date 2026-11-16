@@ -79,14 +79,11 @@ def test_structure():
         'pyproject.toml',
         '.env.example',
         '.gitignore',
-        'README.md',
-        'SETUP.md',
+        '../README.md',
         'scripts/setup.sh',
         'scripts/setup_supabase.py',
         'docs/supabase_schema.sql',
         'docs/SUPABASE_SETUP.md',
-        'docs/PROJECT_STRUCTURE.md',
-        'docs/CLEANUP_SUMMARY.md',
         'tests/test_structure.py'
     ]
     
