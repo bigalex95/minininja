@@ -10,7 +10,7 @@ def test_imports():
     print("Testing imports...")
     
     try:
-        from src.core import GameConfig, DifficultyLevel, Fruit, Trail, FruitNinjaGame
+        from src.core import GameConfig, DifficultyLevel, Fruit, Trail, MiniNinjaGame
         print("✅ Core modules imported successfully")
     except Exception as e:
         print(f"❌ Core modules import failed: {e}")
@@ -107,7 +107,7 @@ def test_structure():
 
 def main():
     print("=" * 60)
-    print("Fruit Ninja CV - Structure & Import Test")
+    print("MiniNinja - Structure & Import Test")
     print("=" * 60)
     print()
     

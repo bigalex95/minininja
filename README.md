@@ -1,6 +1,6 @@
 # MiniNinja
 
-A webcam fruit-slicing game controlled by your index finger. MediaPipe Hands tracks the hand, a velocity check turns fast fingertip motion into a slash, and OpenCV renders the game. No controllers or touchscreen, just a camera. A small Python prototype; inspired by Fruit Ninja.
+A webcam fruit-slicing game controlled by your index finger. MediaPipe Hands tracks the hand, a velocity check turns fast fingertip motion into a slash, and OpenCV renders the game. No controllers or touchscreen, just a camera. A small Python prototype.
 
 <!-- TODO: demo GIF of gameplay (hand swipe slicing fruit, trail visible) -->
 

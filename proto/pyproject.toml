@@ -1,7 +1,7 @@
 [project]
-name = "fruit-ninja-cv"
+name = "minininja"
 version = "0.1.0"
-description = "A computer vision-based Fruit Ninja game using hand gesture recognition"
+description = "A computer vision-based MiniNinja game using hand gesture recognition"
 requires-python = ">=3.11"
 authors = [
     {name = "bigalex95"}
@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.scripts]
-fruit-ninja = "main:main"
+minininja = "main:main"
 
 [project.urls]
 Homepage = "https://github.com/bigalex95/minininja"

@@ -1,4 +1,4 @@
--- Supabase Schema for Fruit Ninja CV Leaderboard
+-- Supabase Schema for MiniNinja Leaderboard
 -- Run this SQL in your Supabase SQL Editor
 
 -- Create the leaderboard table
@@ -75,4 +75,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Optional: Add a comment to the table
-COMMENT ON TABLE leaderboard IS 'Stores player scores for Fruit Ninja CV game';
+COMMENT ON TABLE leaderboard IS 'Stores player scores for MiniNinja game';

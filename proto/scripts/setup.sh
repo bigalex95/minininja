@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup script for Fruit Ninja CV prototype
+# Setup script for MiniNinja prototype
 
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -9,7 +9,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." &> /dev/null && pwd )"
 cd "$PROJECT_ROOT"
 
 echo "================================"
-echo "Fruit Ninja CV - Setup Script"
+echo "MiniNinja - Setup Script"
 echo "================================"
 echo ""
 
